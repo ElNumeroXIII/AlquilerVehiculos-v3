@@ -1,13 +1,15 @@
 //Por Joaquin Francisco Sanchez Capel
 
-package org.iesalandalus.programacion.alquilervehiculos.modelo.negocio.memoria;
+package org.iesalandalus.programacion.alquilervehiculos.modelo.negocio.ficheros;
 
 import org.iesalandalus.programacion.alquilervehiculos.modelo.dominio.Cliente;
 import org.iesalandalus.programacion.alquilervehiculos.modelo.dominio.Vehiculo;
 import org.iesalandalus.programacion.alquilervehiculos.modelo.negocio.IAlquileres;
 import org.iesalandalus.programacion.alquilervehiculos.modelo.dominio.Alquiler;
 
+import java.io.File;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -16,10 +18,25 @@ import java.util.List;
 import javax.naming.OperationNotSupportedException;
 
 public class Alquileres implements IAlquileres {
+	private static final File FICHERO_ALQUILERES;
+	private static final DateTimeFormatter FORMATO_FECHA;
+	private static final String RAIZ = "";
+	private static final String ALQUILER = "";
+	private static final String CLIENTE = "";
+	private static final String VEHICULO = "";
+	private static final String FECHA_ALQUILER = "";
+	private static final String FECHA_DEVOLUCION = "";
+	private static Alquileres instancia;
 	private List<Alquiler> coleccionAlquileres;
 
 	public Alquileres() {
 		coleccionAlquileres = new ArrayList<>();
+	}
+	
+	static Alquileres getInstancia() {
+		if(instancia==null)
+			instancia = new Alquileres();
+		return instancia;
 	}
 
 	@Override

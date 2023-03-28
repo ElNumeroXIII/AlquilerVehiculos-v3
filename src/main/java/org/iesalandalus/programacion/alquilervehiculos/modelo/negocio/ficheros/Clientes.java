@@ -1,24 +1,45 @@
 
 //Por Joaquin Francisco Sanchez Capel
 
-package org.iesalandalus.programacion.alquilervehiculos.modelo.negocio.memoria;
+package org.iesalandalus.programacion.alquilervehiculos.modelo.negocio.ficheros;
 
 import org.iesalandalus.programacion.alquilervehiculos.modelo.dominio.Cliente;
 import org.iesalandalus.programacion.alquilervehiculos.modelo.negocio.IClientes;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import javax.naming.OperationNotSupportedException;
+import javax.swing.text.Document;
 
 public class Clientes implements IClientes {
+	
+	private static final File FICHERO_CLIENTES = new File("C:\\Users\\Archen\\git\\AlquilerVehiculos-v2\\datos\\clientes.xml"); ;
+	private static final String RAIZ = "";
+	private static final String CLIENTE = "";
+	private static final String NOMBRE = "";
+	private static final String DNI = "";
+	private static final String TELEFONO = "";
+	private static Clientes instancia;
 
 	private List<Cliente> coleccionClientes;
 
 	public Clientes() {
 		coleccionClientes = new ArrayList<>();
 	}
+	
+	static Clientes getInstancia() {
+		if(instancia ==null)
+			instancia = new Clientes();
+		return instancia;
+	}
+	
+	private void leerDom(Document documentoXml) {
+	File.
+	}
+	
 
 	@Override
 	public List<Cliente> get() {
