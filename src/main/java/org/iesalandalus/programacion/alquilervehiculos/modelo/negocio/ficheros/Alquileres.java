@@ -5,22 +5,30 @@ package org.iesalandalus.programacion.alquilervehiculos.modelo.negocio.ficheros;
 import org.iesalandalus.programacion.alquilervehiculos.modelo.dominio.Cliente;
 import org.iesalandalus.programacion.alquilervehiculos.modelo.dominio.Vehiculo;
 import org.iesalandalus.programacion.alquilervehiculos.modelo.negocio.IAlquileres;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.iesalandalus.programacion.alquilervehiculos.modelo.dominio.Alquiler;
 
 import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.lang.model.element.Element;
 import javax.naming.OperationNotSupportedException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 public class Alquileres implements IAlquileres {
-	private static final File FICHERO_ALQUILERES;
-	private static final DateTimeFormatter FORMATO_FECHA;
-	private static final String RAIZ = "";
+	
+	private static final File FICHERO_ALQUILERES = new File(
+			"C:\\Users\\Archen\\git\\AlquilerVehiculos-v2\\datos\\alquileres.xml");
+	private static final DateTimeFormatter FORMATO_FECHA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	private static final String RAIZ = "alquileres";
 	private static final String ALQUILER = "";
 	private static final String CLIENTE = "";
 	private static final String VEHICULO = "";
@@ -32,16 +40,92 @@ public class Alquileres implements IAlquileres {
 	public Alquileres() {
 		coleccionAlquileres = new ArrayList<>();
 	}
-	
+
 	static Alquileres getInstancia() {
-		if(instancia==null)
+		if (instancia == null)
 			instancia = new Alquileres();
 		return instancia;
 	}
 
+	public void comenzar() {
+
+		try {
+			leerDom(UtilidadesXml.leerXmlDeFichero(FICHERO_ALQUILERES));
+		} catch (OperationNotSupportedException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	private void leerDom(Document documentoXml) throws OperationNotSupportedException {
+
+		NodeList nodosClientes = documentoXml.getElementsByTagName(ALQUILER);
+		for (int i = 0; i < nodosClientes.getLength(); i++) {
+			coleccionAlquileres.add(getAlquiler((Element) nodosClientes.item(i)));
+		}
+	}
+
+	private Alquiler getAlquiler(Element element) throws OperationNotSupportedException {
+
+		Node nodoCliente = (Node) element;
+
+		String cliente = nodoCliente.getAttributes().getNamedItem(CLIENTE).getTextContent();
+		String fechaAlquiler = nodoCliente.getAttributes().getNamedItem(FECHA_ALQUILER).getTextContent();
+		String vehiculo = nodoCliente.getAttributes().getNamedItem(VEHICULO).getTextContent();
+
+		Alquiler alquilerNuevo = new Alquiler(Cliente.getClienteConDni(cliente),
+				Vehiculo.getVehiculoConMatricula(vehiculo), LocalDate.parse(fechaAlquiler, FORMATO_FECHA));
+
+		if (nodoCliente.getAttributes().getNamedItem(FECHA_DEVOLUCION).getTextContent() != null) {
+			String fechaDevolucion = nodoCliente.getAttributes().getNamedItem(FECHA_DEVOLUCION).getTextContent();
+			alquilerNuevo.devolver(LocalDate.parse(fechaDevolucion, FORMATO_FECHA));
+		}
+		return alquilerNuevo;
+	}
+
+	public void terminar() {
+
+		UtilidadesXml.escribirXmlAFichero(crearDom(), FICHERO_ALQUILERES);
+
+	}
+
+	private Document crearDom() {
+		try {
+
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document documento = dBuilder.newDocument();
+			Element raiz = (Element) documento.createElement(RAIZ);
+			documento.appendChild((Node) raiz);
+			for (Alquiler alquiler : coleccionAlquileres) {
+				Element elementoAlquiler = getElemento(documento, alquiler);
+				((Node) raiz).appendChild((Node) elementoAlquiler);
+			}
+
+			return documento;
+
+		} catch (ParserConfigurationException e) {
+			System.out.println("Error al crear el DOM");
+			return null;
+		}
+	}
+
+	private Element getElemento(Document documentoXml, Alquiler alquiler) {
+		Element elementoAlquiler = (Element) documentoXml.createElement("alquiler");
+		((DocumentBuilderFactory) elementoAlquiler).setAttribute("cliente", alquiler.getCliente().getDni());
+		((DocumentBuilderFactory) elementoAlquiler).setAttribute("fechaAlquiler",
+				alquiler.getFechaAlquiler().format(FORMATO_FECHA));
+		if (alquiler.getFechaDevolucion() != null) {
+			((DocumentBuilderFactory) elementoAlquiler).setAttribute("fechaDevolucion",
+					alquiler.getFechaDevolucion().format(FORMATO_FECHA));
+		}
+		((DocumentBuilderFactory) elementoAlquiler).setAttribute("vehiculo", alquiler.getVehiculo().getMatricula());
+		return elementoAlquiler;
+	}
+
 	@Override
 	public List<Alquiler> get() {
-		return Collections.unmodifiableList(coleccionAlquileres);
+		return new ArrayList<>(coleccionAlquileres);
 	}
 
 	@Override
@@ -66,8 +150,6 @@ public class Alquileres implements IAlquileres {
 		return alquilerTurismo;
 	}
 
-
-
 	@Override
 	public void insertar(Alquiler alquiler) throws OperationNotSupportedException {
 		if (alquiler == null) {
@@ -79,6 +161,10 @@ public class Alquileres implements IAlquileres {
 
 	private void comprobarAlquiler(Cliente cliente, Vehiculo vehiculo, LocalDate fechaAlquiler)
 			throws OperationNotSupportedException {
+		
+		if (cliente==null) {
+			throw new NullPointerException("El cliente no puede ser nulo");
+		}
 
 		for (int i = 0; i < get(cliente).size(); i++) {
 
@@ -95,11 +181,11 @@ public class Alquileres implements IAlquileres {
 		for (int i = 0; i < get(vehiculo).size(); i++) {
 
 			if (get(vehiculo).get(i).getFechaDevolucion() == null) {
-				throw new OperationNotSupportedException("ERROR: El turismo está actualmente alquilado.");
+				throw new OperationNotSupportedException("ERROR: El vehículo está actualmente alquilado.");
 			}
 			if (get(vehiculo).get(i).getFechaDevolucion().isAfter(fechaAlquiler)
 					|| get(vehiculo).get(i).getFechaDevolucion().isEqual(fechaAlquiler)) {
-				throw new OperationNotSupportedException("ERROR: El turismo tiene un alquiler posterior.");
+				throw new OperationNotSupportedException("ERROR: El vehículo tiene un alquiler posterior.");
 			}
 		}
 
@@ -110,21 +196,21 @@ public class Alquileres implements IAlquileres {
 		if (cliente == null) {
 			throw new NullPointerException("ERROR: No se puede devolver un alquiler de un cliente nulo.");
 		}
-		
+
 		Alquiler alquilerTemp = getAlquilerAbierto(cliente);
-		
-		if(alquilerTemp == null)
+
+		if (alquilerTemp == null)
 			throw new OperationNotSupportedException("ERROR: No existe ningún alquiler abierto para ese cliente.");
-			
+
 		buscar(alquilerTemp).devolver(fechaDevolucion);
-		
+
 	}
 
 	private Alquiler getAlquilerAbierto(Cliente cliente) throws OperationNotSupportedException {
-		
+
 		if (cliente == null)
 			throw new NullPointerException("ERROR: No se puede devolver un alquiler de un cliente nulo.");
-		
+
 		Alquiler alquilerTemp = null;
 		Iterator<Alquiler> iterador = coleccionAlquileres.iterator();
 		while (alquilerTemp == null && iterador.hasNext()) {
@@ -133,9 +219,9 @@ public class Alquileres implements IAlquileres {
 				alquilerTemp = alquiler;
 				break;
 			}
-			
-		if(alquilerTemp==null)
-			throw new OperationNotSupportedException();
+
+			if (alquilerTemp == null)
+				throw new OperationNotSupportedException();
 		}
 		return alquilerTemp;
 	}
@@ -145,12 +231,12 @@ public class Alquileres implements IAlquileres {
 		if (vehiculo == null) {
 			throw new NullPointerException("ERROR: No se puede devolver un alquiler de un vehículo nulo.");
 		}
-		
+
 		Alquiler alquilerTemp = getAlquilerAbierto(vehiculo);
-		
-		if(alquilerTemp == null)
+
+		if (alquilerTemp == null)
 			throw new OperationNotSupportedException("ERROR: No existe ningún alquiler abierto para ese vehículo.");
-			
+
 		buscar(alquilerTemp).devolver(fechaDevolucion);
 	}
 
@@ -164,9 +250,9 @@ public class Alquileres implements IAlquileres {
 				alquilerTemp = alquiler;
 				break;
 			}
-			
-		if(alquilerTemp==null)
-			throw new OperationNotSupportedException();
+
+			if (alquilerTemp == null)
+				throw new OperationNotSupportedException();
 		}
 
 		return alquilerTemp;

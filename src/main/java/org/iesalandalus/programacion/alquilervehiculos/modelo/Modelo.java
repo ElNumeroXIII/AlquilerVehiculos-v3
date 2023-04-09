@@ -24,6 +24,9 @@ public abstract class Modelo {
 	
 	protected Modelo (FactoriaFuenteDatos factoriaFuenteDatos) {
 		setFuenteDatos(factoriaFuenteDatos.crear());
+		clientes =fuenteDatos.crearClientes();
+		vehiculos = fuenteDatos.crearVehiculos();
+		alquileres = fuenteDatos.crearAlquileres();
 	}
 	
 
@@ -46,9 +49,10 @@ public abstract class Modelo {
 	}
 	
 	public void comenzar() {
-		clientes =  fuenteDatos.crearClientes();
-		vehiculos = fuenteDatos.crearVehiculos();
-		alquileres = fuenteDatos.crearAlquileres();
+
+		clientes.comenzar();
+		vehiculos.comenzar();
+		alquileres.comenzar();
 		
 
 	}
