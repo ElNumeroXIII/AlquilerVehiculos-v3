@@ -14,8 +14,6 @@ public class Turismo extends Vehiculo {
 
 	public Turismo(Turismo turismo) {
 		super(turismo);
-		if (turismo == null)
-			throw new NullPointerException("ERROR: No es posible copiar un turismo nulo.");
 		cilindrada = turismo.getCilindrada();
 	}
 
@@ -32,7 +30,7 @@ public class Turismo extends Vehiculo {
 	}
 
 	@Override
-	int getFactorPrecio() {
+	 public int getFactorPrecio() {
 		return getCilindrada() / FACTOR_CILINDRADA;
 	}
 

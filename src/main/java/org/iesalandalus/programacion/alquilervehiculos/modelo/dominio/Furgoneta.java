@@ -40,7 +40,7 @@ public class Furgoneta extends Vehiculo {
 	}
 
 	@Override
-	int getFactorPrecio() {
+	public int getFactorPrecio() {
 		return pma / FACTOR_PMA + plazas * FACTOR_PLAZAS;
 	}
 

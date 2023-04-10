@@ -7,45 +7,43 @@ import org.iesalandalus.programacion.alquilervehiculos.modelo.dominio.Turismo;
 import org.iesalandalus.programacion.alquilervehiculos.modelo.dominio.Vehiculo;
 
 public enum TipoVehiculo {
-TURISMO("Turismo"),
-AUTOBUS("Autobus"),
-FURGONETA("Furgoneta");
-	
-	 private String nombre;
-	
+	TURISMO("Turismo"), AUTOBUS("Autobus"), FURGONETA("Furgoneta");
+
+	private String nombre;
+
 	private TipoVehiculo(String nombrePasado) {
 		nombre = nombrePasado;
 	}
-	
+
 	private static boolean esOrdinalValido(int ordinal) {
-		return (ordinal <= 0 || ordinal > values().length) ;
+		return (ordinal <= 0 || ordinal > values().length);
 	}
-	
+
 	public static TipoVehiculo get(int ordinal) {
-		if (!esOrdinalValido(ordinal)) 
+		if (!esOrdinalValido(ordinal))
 			throw new IllegalArgumentException("Ordinal no válido");
 		else
 			return values()[ordinal];
 	}
-	
+
 	public static TipoVehiculo get(Vehiculo vehiculo) {
 		if (vehiculo == null)
 			throw new IllegalArgumentException("Vehículo no válido");
 
-		int ordinal=0;
+		TipoVehiculo ordinal = null;
 
 		if (vehiculo instanceof Turismo turismo)
-			ordinal = TipoVehiculo.TURISMO.ordinal();
+			ordinal = TipoVehiculo.TURISMO;
 		else if (vehiculo instanceof Autobus bus)
-			ordinal = TipoVehiculo.AUTOBUS.ordinal();
+			ordinal = TipoVehiculo.AUTOBUS;
 		else if (vehiculo instanceof Furgoneta furgo)
-			ordinal = TipoVehiculo.FURGONETA.ordinal();
-		
-		return get(ordinal);
+			ordinal = TipoVehiculo.FURGONETA;
+
+		return ordinal;
 	}
-	
+
 	@Override
 	public String toString() {
-		return String.format("%d - %s", ordinal(),nombre);
+		return String.format("%d - %s", ordinal(), nombre);
 	}
 }

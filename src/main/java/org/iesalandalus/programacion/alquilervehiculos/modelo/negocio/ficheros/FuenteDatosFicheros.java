@@ -7,16 +7,18 @@ import org.iesalandalus.programacion.alquilervehiculos.modelo.negocio.IFuenteDat
 import org.iesalandalus.programacion.alquilervehiculos.modelo.negocio.IVehiculos;
 
 public class FuenteDatosFicheros implements IFuenteDatos {
-@Override
-public IClientes crearClientes() {
-	return new Clientes();
+	@Override
+	public IClientes crearClientes() {
+		return new Clientes();
 	}
-@Override
-public IVehiculos crearVehiculos() {
-	return new Vehiculos();
+
+	@Override
+	public IVehiculos crearVehiculos() {
+		return new Vehiculos();
 	}
-@Override
-public IAlquileres crearAlquileres() {
-	return new Alquileres();
+
+	@Override
+	public IAlquileres crearAlquileres() {
+		return new Alquileres();
 	}
 }

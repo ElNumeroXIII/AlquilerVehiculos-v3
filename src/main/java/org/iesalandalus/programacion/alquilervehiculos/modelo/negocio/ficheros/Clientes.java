@@ -9,7 +9,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +18,6 @@ import javax.naming.OperationNotSupportedException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-
 
 public class Clientes implements IClientes {
 
@@ -123,13 +121,11 @@ public class Clientes implements IClientes {
 	}
 
 	@Override
-	public Cliente buscar(Cliente clientes) {
-		if (clientes == null)
+	public Cliente buscar(Cliente cliente) {
+		if (cliente == null)
 			throw new NullPointerException("ERROR: No se puede buscar un cliente nulo.");
-		for (Cliente cliente : coleccionClientes) {
-			if (cliente.equals(clientes)) {
-				return cliente;
-			}
+		if (coleccionClientes.indexOf(cliente) != -1) {
+			return coleccionClientes.get(coleccionClientes.indexOf(cliente));
 		}
 		return null;
 	}

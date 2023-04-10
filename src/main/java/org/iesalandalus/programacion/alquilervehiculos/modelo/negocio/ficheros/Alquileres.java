@@ -24,7 +24,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 public class Alquileres implements IAlquileres {
-	
+
 	private static final File FICHERO_ALQUILERES = new File(
 			"C:\\Users\\Archen\\git\\AlquilerVehiculos-v2\\datos\\alquileres.xml");
 	private static final DateTimeFormatter FORMATO_FECHA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -161,8 +161,8 @@ public class Alquileres implements IAlquileres {
 
 	private void comprobarAlquiler(Cliente cliente, Vehiculo vehiculo, LocalDate fechaAlquiler)
 			throws OperationNotSupportedException {
-		
-		if (cliente==null) {
+
+		if (cliente == null) {
 			throw new NullPointerException("El cliente no puede ser nulo");
 		}
 
@@ -206,7 +206,7 @@ public class Alquileres implements IAlquileres {
 
 	}
 
-	private Alquiler getAlquilerAbierto(Cliente cliente) throws OperationNotSupportedException {
+	private Alquiler getAlquilerAbierto(Cliente cliente) {
 
 		if (cliente == null)
 			throw new NullPointerException("ERROR: No se puede devolver un alquiler de un cliente nulo.");
@@ -217,11 +217,11 @@ public class Alquileres implements IAlquileres {
 			Alquiler alquiler = iterador.next();
 			if (alquiler.getCliente().equals(cliente) && alquiler.getFechaDevolucion() == null) {
 				alquilerTemp = alquiler;
-				break;
 			}
 
-			if (alquilerTemp == null)
-				throw new OperationNotSupportedException();
+			if (alquilerTemp == null) {
+				return null;
+			}
 		}
 		return alquilerTemp;
 	}
@@ -259,14 +259,12 @@ public class Alquileres implements IAlquileres {
 	}
 
 	@Override
-	public Alquiler buscar(Alquiler alquileres) {
-		if (alquileres == null) {
+	public Alquiler buscar(Alquiler alquiler) {
+		if (alquiler == null) {
 			throw new NullPointerException("ERROR: No se puede buscar un alquiler nulo.");
 		}
-		for (Alquiler alquiler : coleccionAlquileres) {
-			if (alquiler.equals(alquileres)) {
-				return alquiler;
-			}
+		if (coleccionAlquileres.indexOf(alquiler) != -1) {
+			return coleccionAlquileres.get(coleccionAlquileres.indexOf(alquiler));
 		}
 		return null;
 	}

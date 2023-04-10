@@ -142,7 +142,10 @@ public enum Accion {
 	public abstract void ejecutar();
 
 	private static boolean esOrdinalValido(int ordinal) {
-		return (ordinal <= 0 || ordinal > values().length) ;
+		if(ordinal < 0 || ordinal > values().length) {
+			return false;
+		}
+		return true;
 	}
 
 	public static Accion get(int ordinal) {

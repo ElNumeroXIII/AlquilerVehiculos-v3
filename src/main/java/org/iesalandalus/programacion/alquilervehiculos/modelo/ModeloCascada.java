@@ -20,14 +20,13 @@ public class ModeloCascada extends Modelo {
 
 	@Override
 	public void insertar(Cliente cliente) throws OperationNotSupportedException {
-		Cliente clienteNuevo = new Cliente(cliente);
-		getClientes().insertar(clienteNuevo);
+		getClientes().insertar(new Cliente(cliente));
 
 	}
 
 	@Override
 	public void insertar(Vehiculo vehiculo) throws OperationNotSupportedException {
-		getVehiculos().insertar(vehiculo);
+		getVehiculos().insertar(Vehiculo.copiar(vehiculo));
 
 	}
 

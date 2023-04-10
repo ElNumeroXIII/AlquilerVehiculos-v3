@@ -30,9 +30,6 @@ public class Cliente {
 	
 	public static Cliente getClienteConDni(String dni) {
 
-		if (dni == null)
-			throw new NullPointerException("ERROR: El DNI no puede ser nulo.");
-
 		Cliente clienteFicticio = new Cliente("Bob Esponja", dni, "950112233");
 		clienteFicticio.setDni(dni);
 		return clienteFicticio;
@@ -70,14 +67,15 @@ public class Cliente {
 	}
 
 	private boolean comprobarLetraDni(String dni) {
-		 int valorDNI = Integer.parseInt(dni.substring(0, dni.length() - 1));
-	        char dniLetra = dni.charAt(dni.length() - 1);
-	        char[] letras = {'T', 'R', 'W', 'A', 'G', 'M', 'Y', 'F', 'P', 'D', 'X', 'B', 'N', 'J', 'Z', 'S', 'Q', 'V', 'H', 'L', 'C', 'K', 'E'};
-	        boolean salida = true;
-	        if (dniLetra != letras[valorDNI % 23]) {
-	            salida = false;
-	        }
-	        return salida;
+		int valorDNI = Integer.parseInt(dni.substring(0, dni.length() - 1));
+		char dniLetra = dni.charAt(dni.length() - 1);
+		char[] letras = { 'T', 'R', 'W', 'A', 'G', 'M', 'Y', 'F', 'P', 'D', 'X', 'B', 'N', 'J', 'Z', 'S', 'Q', 'V', 'H',
+				'L', 'C', 'K', 'E' };
+		if (dniLetra != letras[valorDNI % 23])
+			return false;
+
+		return true;
+
 	}
 
 	public String getTelefono() {

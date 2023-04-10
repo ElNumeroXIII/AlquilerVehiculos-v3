@@ -199,10 +199,8 @@ public class Vehiculos implements IVehiculos {
 	public Vehiculo buscar(Vehiculo vehiculo) {
 		if(vehiculo == null)
 			throw new NullPointerException("ERROR: No se puede buscar un vehículo nulo.");		
-		for (Vehiculo vehiculoTemp : coleccionVehiculos) {
-			if (vehiculoTemp.equals(vehiculo)) {
-				return vehiculoTemp;
-			}
+		if(coleccionVehiculos.indexOf(vehiculo)!=-1) {
+			return coleccionVehiculos.get(coleccionVehiculos.indexOf(vehiculo));
 		}
 		return null;
 	}

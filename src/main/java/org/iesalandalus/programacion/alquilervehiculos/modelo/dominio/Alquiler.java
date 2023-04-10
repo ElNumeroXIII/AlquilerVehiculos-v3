@@ -112,23 +112,27 @@ public class Alquiler {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		Alquiler other = (Alquiler) obj;
 		return  Objects.equals(cliente, other.cliente)
 				&& Objects.equals(fechaAlquiler, other.fechaAlquiler)
-				&& Objects.equals(fechaDevolucion, other.fechaDevolucion) && Objects.equals(vehiculo, other.vehiculo);
+				&& Objects.equals(vehiculo, other.vehiculo);
 	}
 
 	@Override
 	public String toString() {
-		if (getFechaDevolucion() == null)
+		if (getFechaDevolucion() == null) {
 			return String.format("%s <---> %s, %s - %s (%d€)", cliente, vehiculo,
 					getFechaAlquiler().format(Alquiler.FORMATO_FECHA), "Aún no devuelto", 0);
+		}
 		return String.format("%s <---> %s, %s - %s (%d€)", cliente, vehiculo,
 				getFechaAlquiler().format(Alquiler.FORMATO_FECHA),
 				getFechaDevolucion().format(Alquiler.FORMATO_FECHA), getPrecio());

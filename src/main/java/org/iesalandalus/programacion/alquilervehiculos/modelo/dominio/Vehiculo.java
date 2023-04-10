@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 public abstract class Vehiculo {
 
 	private static final String ER_MARCA = "([A-Z][a-z]+([- ]?[A-Z][a-z]+)*)|([A-Z]+)";
-	private static final String ER_MATRICULA = "\\d{4}[BCDFGHJKLMNPRSTVWXYZ]{3}";
+	private static final String ER_MATRICULA = "\\d{4}[ABCDFGHJKLMNPRSTVWXYZ]{3}";
 	private String marca;
 	private String modelo;
 	private String matricula;
@@ -31,12 +31,15 @@ public abstract class Vehiculo {
 	public static Vehiculo copiar(Vehiculo vehiculo) {
 		Vehiculo vehiculoCopia = null;
 
-		if (vehiculo instanceof Turismo turismo)
+		if (vehiculo instanceof Turismo turismo) {
 			vehiculoCopia = new Turismo(turismo);
-		else if (vehiculo instanceof Autobus bus)
+		}
+		else if (vehiculo instanceof Autobus bus) {
 			vehiculoCopia = new Autobus(bus);
-		else if (vehiculo instanceof Furgoneta furgo)
-			vehiculoCopia = new Furgoneta(furgo);		
+		}
+		else if (vehiculo instanceof Furgoneta furgo) {
+			vehiculoCopia = new Furgoneta(furgo);	
+		}
 		return vehiculoCopia;
 	}
 
