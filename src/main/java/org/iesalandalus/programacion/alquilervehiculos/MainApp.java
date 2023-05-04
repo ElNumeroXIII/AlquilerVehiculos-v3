@@ -11,7 +11,7 @@ import org.iesalandalus.programacion.alquilervehiculos.vista.Vista;
 public class MainApp {
 
 	public static void main(String[] args) {
-		Vista vista = FactoriaVista.TEXTO.crear();
+		Vista vista = FactoriaVista.GRAFICA.crear();
 		
 		Modelo modelo = new ModeloCascada(FactoriaFuenteDatos.FICHEROS);
 		
